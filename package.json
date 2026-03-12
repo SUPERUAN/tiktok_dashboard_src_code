@@ -17,7 +17,8 @@
     "@nestjs/platform-express": "^11.0.0",
     "axios": "^1.13.6",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "~7.8.0"
+    "rxjs": "~7.8.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@angular-devkit/core": "~21.1.0",

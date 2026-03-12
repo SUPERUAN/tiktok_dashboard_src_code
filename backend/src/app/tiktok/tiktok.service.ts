@@ -7,12 +7,21 @@ export class TiktokService {
     private readonly authState = 'test123';
 
     getLoginUrl() {
-        const clientKey = process.env.TIKTOK_CLIENT_KEY;
-        const redirectUri = encodeURIComponent(process.env.TIKTOK_REDIRECT_URI || '');
-        const scope = encodeURIComponent('user.info.basic,user.info.stats,video.list');
+        const clientKey = process.env.TIKTOK_CLIENT_KEY || '';
+        const redirectUri = process.env.TIKTOK_REDIRECT_URI || '';
+        const scope = 'user.info.basic,user.info.stats,video.list';
         const state = this.authState;
 
-        return `https://www.tiktok.com/v2/auth/authorize/?client_key=${clientKey}&scope=${scope}&response_type=code&redirect_uri=${redirectUri}&state=${state}`;
+        const params = new URLSearchParams({
+            client_key: clientKey,
+            scope,
+            response_type: 'code',
+            redirect_uri: redirectUri,
+            state,
+            disable_auto_auth: '1',
+        });
+
+        return `https://www.tiktok.com/v2/auth/authorize/?${params.toString()}`;
     }
 
     async exchangeCodeForToken(code: string) {
@@ -62,12 +71,18 @@ export class TiktokService {
     }
 
     async getVideosWithAllFields() {
+        console.log('getVideosWithAllFields start');
+        console.log('accessToken exists:', !!this.accessToken);
+
         if (!this.accessToken) {
             throw new Error('No access token. Please login first.');
         }
 
         const videoList = await this.getVideoIds();
+        console.log('videoList:', videoList);
+
         const videoIds = videoList.map((v: any) => v.id).filter(Boolean);
+        console.log('videoIds:', videoIds);
 
         if (videoIds.length === 0) {
             return [];
@@ -105,6 +120,8 @@ export class TiktokService {
                 },
             },
         );
+
+        console.log('video/query done');
 
         return response.data?.data?.videos || [];
     }

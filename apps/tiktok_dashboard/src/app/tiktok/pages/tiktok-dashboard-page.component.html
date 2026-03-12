@@ -1,0 +1,34 @@
+<div class="page">
+  <h1>TikTok Dashboard</h1>
+
+  <div class="actions">
+    <button type="button" (click)="loginWithTiktok()">
+      Login with TikTok
+    </button>
+
+    <button type="button" (click)="loadVideos()" [disabled]="loading">
+      {{ loading ? 'Loading...' : 'Load Videos' }}
+    </button>
+
+    <button type="button" (click)="exportExcel()" [disabled]="!videos.length">
+      Export Excel
+    </button>
+  </div>
+
+  <p>loading: {{ loading }}</p>
+  <p>videos length: {{ videos.length }}</p>
+
+  @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+  }
+
+  <pre>{{ videos | json }}</pre>
+
+  @if (videos.length > 0) {
+    <ul>
+      @for (video of videos; track video.id) {
+        <li>{{ video.title }} - {{ video.view_count }}</li>
+      }
+    </ul>
+  }
+</div>

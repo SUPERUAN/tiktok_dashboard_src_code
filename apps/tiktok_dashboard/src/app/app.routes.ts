@@ -1,3 +1,9 @@
-import { Route } from '@angular/router';
+import { Routes } from '@angular/router';
+import { TiktokDashboardPageComponent } from './tiktok/pages/tiktok-dashboard-page.component';
 
-export const appRoutes: Route[] = [];
+export const appRoutes: Routes = [
+  {
+    path: '',
+    component: TiktokDashboardPageComponent,
+  },
+];
