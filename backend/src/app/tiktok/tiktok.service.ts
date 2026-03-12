@@ -4,12 +4,13 @@ import axios from 'axios';
 @Injectable()
 export class TiktokService {
     private accessToken: string | null = null;
+    private readonly authState = 'test123';
 
     getLoginUrl() {
         const clientKey = process.env.TIKTOK_CLIENT_KEY;
         const redirectUri = encodeURIComponent(process.env.TIKTOK_REDIRECT_URI || '');
         const scope = encodeURIComponent('user.info.basic,user.info.stats,video.list');
-        const state = 'test123';
+        const state = this.authState;
 
         return `https://www.tiktok.com/v2/auth/authorize/?client_key=${clientKey}&scope=${scope}&response_type=code&redirect_uri=${redirectUri}&state=${state}`;
     }
@@ -29,10 +30,13 @@ export class TiktokService {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-            }
+            },
         );
 
-        this.accessToken = response.data.access_token;
+        this.accessToken =
+            response.data?.access_token ||
+            response.data?.data?.access_token ||
+            null;
         return response.data;
     }
 
@@ -51,7 +55,7 @@ export class TiktokService {
                     Authorization: `Bearer ${this.accessToken}`,
                     'Content-Type': 'application/json',
                 },
-            }
+            },
         );
 
         return response.data?.data?.videos || [];
@@ -99,7 +103,7 @@ export class TiktokService {
                     Authorization: `Bearer ${this.accessToken}`,
                     'Content-Type': 'application/json',
                 },
-            }
+            },
         );
 
         return response.data?.data?.videos || [];
