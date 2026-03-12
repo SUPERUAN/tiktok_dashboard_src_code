@@ -1,5 +1,5 @@
 .page {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 32px auto;
   padding: 0 16px;
   font-family: Arial, sans-serif;
@@ -31,14 +31,15 @@ button:disabled {
   margin-bottom: 16px;
 }
 
-.summary {
-  margin-bottom: 12px;
-  font-weight: 600;
+.success {
+  color: #15803d;
+  margin-bottom: 16px;
 }
 
 .videos-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 16px;
 }
 
 .videos-table th,
@@ -46,9 +47,33 @@ button:disabled {
   border: 1px solid #d1d5db;
   padding: 10px;
   text-align: left;
+  vertical-align: top;
 }
 
-.success {
-  color: #15803d;
-  margin-bottom: 16px;
+.videos-table th {
+  background: #f3f4f6;
+  font-weight: 700;
+}
+
+.videos-table tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.debug-box {
+  margin-top: 24px;
+}
+
+.cover-image {
+  width: 72px;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+}
+
+pre {
+  background: #f3f4f6;
+  padding: 12px;
+  border-radius: 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
 }

@@ -22,13 +22,67 @@
     <p class="error">{{ errorMessage }}</p>
   }
 
-  <pre>{{ videos | json }}</pre>
-
   @if (videos.length > 0) {
-    <ul>
-      @for (video of videos; track video.id) {
-        <li>{{ video.title }} - {{ video.view_count }}</li>
-      }
-    </ul>
+    <table class="videos-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Cover</th>
+          <th>Id</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Create Time</th>
+          <th>Views</th>
+          <th>Likes</th>
+          <th>Comments</th>
+          <th>Shares</th>
+          <th>Duration</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (video of videos; track video.id; let i = $index) {
+          <tr>
+            <td>{{ i + 1 }}</td>
+
+            <td>
+              @if (video.cover_image_url) {
+                <img
+                  class="cover-image"
+                  [src]="video.cover_image_url"
+                  [alt]="video.title || 'cover'"
+                />
+              } @else {
+                <span>-</span>
+              }
+            </td>
+
+            <td>{{ video.id || '-' }}</td>
+            <td>{{ video.title || '-' }}</td>
+            <td>{{ video.video_description || '-' }}</td>
+            <td>{{ formatUnixTime(video.create_time) }}</td>
+            <td>{{ video.view_count || 0 }}</td>
+            <td>{{ video.like_count || 0 }}</td>
+            <td>{{ video.comment_count || 0 }}</td>
+            <td>{{ video.share_count || 0 }}</td>
+            <td>{{ video.duration || 0 }}</td>
+            <td>
+              @if (video.share_url) {
+                <a [href]="video.share_url" target="_blank">Open</a>
+              } @else {
+                <span>-</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p>No videos loaded yet.</p>
   }
+
+  <details class="debug-box">
+    <summary>Raw JSON</summary>
+    <pre>{{ videos | json }}</pre>
+  </details>
 </div>

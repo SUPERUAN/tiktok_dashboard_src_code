@@ -34,7 +34,9 @@ export class TiktokDashboardPageComponent {
         console.log('RAW response:', response);
 
         this.zone.run(() => {
-          this.videos = Array.isArray(response?.videos) ? [...response.videos] : [];
+          this.videos = Array.isArray(response?.videos)
+            ? [...response.videos]
+            : [];
           this.loading = false;
 
           console.log('videos after set:', this.videos);
@@ -56,6 +58,14 @@ export class TiktokDashboardPageComponent {
     });
   }
 
+  formatUnixTime(unixTime?: number): string {
+    if (!unixTime) {
+      return '-';
+    }
+
+    return new Date(unixTime * 1000).toLocaleString();
+  }
+
   exportExcel(): void {
     if (!this.videos.length) {
       this.errorMessage = 'No videos to export';
@@ -67,6 +77,7 @@ export class TiktokDashboardPageComponent {
       Id: video.id,
       Title: video.title ?? '',
       Description: video.video_description ?? '',
+      CreateTime: video.create_time ?? '',
       Views: video.view_count ?? 0,
       Likes: video.like_count ?? 0,
       Comments: video.comment_count ?? 0,
