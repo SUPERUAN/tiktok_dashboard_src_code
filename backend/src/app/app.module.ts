@@ -8,9 +8,7 @@ import { TiktokModule } from './tiktok/tiktok.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot(),
     TiktokModule,
   ],
   controllers: [AppController, TiktokController],

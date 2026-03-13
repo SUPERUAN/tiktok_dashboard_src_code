@@ -18,11 +18,21 @@
   <p>loading: {{ loading }}</p>
   <p>videos length: {{ videos.length }}</p>
 
+  <div class="channel-summary">
+    <h2>Channel</h2>
+    <p>Channel Display Name: {{ channel.displayName || '-' }}</p>
+    <p>Channel Username: {{ channel.username || '-' }}</p>
+    <p>Channel Follower: {{ channel.followerCount | number }}</p>
+    <p>Channel Likes: {{ channel.likesCount | number }}</p>
+  </div>
+
   @if (errorMessage) {
     <p class="error">{{ errorMessage }}</p>
   }
 
   @if (videos.length > 0) {
+    <h2>Videos</h2>
+
     <table class="videos-table">
       <thead>
         <tr>
@@ -68,7 +78,9 @@
             <td>{{ video.duration || 0 }}</td>
             <td>
               @if (video.share_url) {
-                <a [href]="video.share_url" target="_blank">Open</a>
+                <a [href]="video.share_url" target="_blank" rel="noopener noreferrer">
+                  Open
+                </a>
               } @else {
                 <span>-</span>
               }
@@ -83,6 +95,6 @@
 
   <details class="debug-box">
     <summary>Raw JSON</summary>
-    <pre>{{ videos | json }}</pre>
+    <pre>{{ { channel: channel, videos: videos } | json }}</pre>
   </details>
 </div>
