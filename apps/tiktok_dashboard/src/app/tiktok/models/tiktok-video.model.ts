@@ -28,3 +28,8 @@ export interface TiktokVideosResponse {
   channel: TiktokChannelInfo;
   videos: TiktokVideo[];
 }
+
+export interface TiktokDashboardData {
+  channel: TiktokChannelInfo;
+  videos: TiktokVideo[];
+}
