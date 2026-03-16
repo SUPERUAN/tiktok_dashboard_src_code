@@ -1,14 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 
 @Injectable()
 export class TiktokService {
   private accessToken: string | null = null;
-  private readonly authState = 'test123';
 
-  getLoginUrl() {
-    const clientKey = process.env.TIKTOK_CLIENT_KEY || '';
-    const redirectUri = process.env.TIKTOK_REDIRECT_URI || '';
+  constructor(private readonly configService: ConfigService) {}
+
+  getLoginUrl(): string {
+    const clientKey = this.configService.get<string>('TIKTOK_CLIENT_KEY') || '';
+    const redirectUri =
+      this.configService.get<string>('TIKTOK_REDIRECT_URI') ||
+      'https://mayson.com:3443/api/tiktok/callback';
+    const authState =
+      this.configService.get<string>('TIKTOK_AUTH_STATE') || 'test123';
 
     const scope = [
       'user.info.basic',
@@ -22,7 +28,7 @@ export class TiktokService {
       scope,
       response_type: 'code',
       redirect_uri: redirectUri,
-      state: this.authState,
+      state: authState,
       disable_auto_auth: '1',
     });
 
@@ -30,12 +36,19 @@ export class TiktokService {
   }
 
   async exchangeCodeForToken(code: string) {
+    const clientKey = this.configService.get<string>('TIKTOK_CLIENT_KEY') || '';
+    const clientSecret =
+      this.configService.get<string>('TIKTOK_CLIENT_SECRET') || '';
+    const redirectUri =
+      this.configService.get<string>('TIKTOK_REDIRECT_URI') ||
+      'https://mayson.com:3443/api/tiktok/callback';
+
     const params = new URLSearchParams();
-    params.append('client_key', process.env.TIKTOK_CLIENT_KEY || '');
-    params.append('client_secret', process.env.TIKTOK_CLIENT_SECRET || '');
+    params.append('client_key', clientKey);
+    params.append('client_secret', clientSecret);
     params.append('code', code);
     params.append('grant_type', 'authorization_code');
-    params.append('redirect_uri', process.env.TIKTOK_REDIRECT_URI || '');
+    params.append('redirect_uri', redirectUri);
 
     const response = await axios.post(
       'https://open.tiktokapis.com/v2/oauth/token/',

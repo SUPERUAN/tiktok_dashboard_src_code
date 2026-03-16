@@ -1,10 +1,14 @@
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 import { TiktokService } from './tiktok.service';
 
 @Controller('tiktok')
 export class TiktokController {
-  constructor(private readonly tiktokService: TiktokService) {}
+  constructor(
+    private readonly tiktokService: TiktokService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Get('login')
   login(@Res() res: Response) {
@@ -21,13 +25,13 @@ export class TiktokController {
       return res.status(400).json({ message: 'Missing code' });
     }
 
+    const frontendUrl =
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200';
+
     try {
       await this.tiktokService.exchangeCodeForToken(code);
-
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:4200';
       return res.redirect(`${frontendUrl}?login=success`);
     } catch (error: any) {
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:4200';
       const message =
         error?.response?.data?.error?.message ||
         error?.response?.data?.message ||
@@ -35,7 +39,7 @@ export class TiktokController {
         'token_exchange_failed';
 
       return res.redirect(
-        `${frontendUrl}?login=error&message=${encodeURIComponent(message)}`
+        `${frontendUrl}?login=error&message=${encodeURIComponent(message)}`,
       );
     }
   }
