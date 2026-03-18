@@ -78,7 +78,11 @@
             <td>{{ video.duration || 0 }}</td>
             <td>
               @if (video.share_url) {
-                <a [href]="video.share_url" target="_blank" rel="noopener noreferrer">
+                <a
+                  [href]="video.share_url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Open
                 </a>
               } @else {

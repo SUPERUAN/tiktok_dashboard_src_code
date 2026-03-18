@@ -44,3 +44,10 @@ Thumbs.db
 .angular
 
 __screenshots__/
+
+# env files
+.env
+.env.template
+
+# certificate folder
+certs

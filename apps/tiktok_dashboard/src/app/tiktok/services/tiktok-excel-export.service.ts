@@ -30,18 +30,18 @@ export class TiktokExcelExportService {
     const worksheet = workbook.addWorksheet(this.worksheetName);
 
     worksheet.columns = [
-      { key: 'cover', width: 28 },       // A
-      { key: 'id', width: 28 },          // B
-      { key: 'title', width: 42 },       // C
+      { key: 'cover', width: 28 }, // A
+      { key: 'id', width: 28 }, // B
+      { key: 'title', width: 42 }, // C
       { key: 'description', width: 42 }, // D
-      { key: 'createTime', width: 28 },  // E
-      { key: 'views', width: 14 },       // F
-      { key: 'likes', width: 14 },       // G
-      { key: 'comments', width: 14 },    // H
-      { key: 'shares', width: 14 },      // I
-      { key: 'duration', width: 14 },    // J
-      { key: 'link', width: 48 },        // K
-      { key: 'coverUrl', width: 48 },    // L hidden
+      { key: 'createTime', width: 28 }, // E
+      { key: 'views', width: 14 }, // F
+      { key: 'likes', width: 14 }, // G
+      { key: 'comments', width: 14 }, // H
+      { key: 'shares', width: 14 }, // I
+      { key: 'duration', width: 14 }, // J
+      { key: 'link', width: 48 }, // K
+      { key: 'coverUrl', width: 48 }, // L hidden
     ];
 
     worksheet.getColumn('coverUrl').hidden = true;

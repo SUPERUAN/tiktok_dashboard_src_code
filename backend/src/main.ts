@@ -21,10 +21,10 @@ async function bootstrap() {
     configService.get<string>('TIKTOK_REDIRECT_URI') ||
     'https://mayson.com:3443/api/tiktok/callback';
 
-    //if redirectUrl = https://mayson.com:3443/api/tiktok/callback
-    //port = 3443
-    //hostname = mayson.com
-    //pathname = /api/tiktok/callback
+  //if redirectUrl = https://mayson.com:3443/api/tiktok/callback
+  //port = 3443
+  //hostname = mayson.com
+  //pathname = /api/tiktok/callback
   const redirectUrl = new URL(redirectUri);
   const callbackHttpsPort = Number(redirectUrl.port || '3443');
   const callbackHost = redirectUrl.hostname;

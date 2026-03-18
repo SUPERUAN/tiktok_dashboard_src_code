@@ -20,14 +20,12 @@ export class TiktokDashboardService {
   }
 
   getDashboardData(): Observable<TiktokDashboardData> {
-    return this.http
-      .get<TiktokVideosResponse>(`${this.baseUrl}/videos`)
-      .pipe(
-        map((response) => ({
-          channel: this.mapChannel(response?.channel),
-          videos: this.mapVideos(response?.videos),
-        })),
-      );
+    return this.http.get<TiktokVideosResponse>(`${this.baseUrl}/videos`).pipe(
+      map((response) => ({
+        channel: this.mapChannel(response?.channel),
+        videos: this.mapVideos(response?.videos),
+      })),
+    );
   }
 
   private mapChannel(channel?: TiktokChannelInfo | null): TiktokChannelInfo {

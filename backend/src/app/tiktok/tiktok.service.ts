@@ -2,6 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 
+interface TiktokVideoIdItem {
+  id: string;
+}
+
 @Injectable()
 export class TiktokService {
   private accessToken: string | null = null;
@@ -66,7 +70,7 @@ export class TiktokService {
     return response.data;
   }
 
-  async getVideoIds() {
+  async getVideoIds(): Promise<TiktokVideoIdItem[]> {
     if (!this.accessToken) {
       throw new Error('No access token. Please login first.');
     }
@@ -119,7 +123,7 @@ export class TiktokService {
     }
 
     const videoList = await this.getVideoIds();
-    const videoIds = videoList.map((v: any) => v.id).filter(Boolean);
+    const videoIds = videoList.map((v) => v.id).filter(Boolean);
 
     if (videoIds.length === 0) {
       return [];

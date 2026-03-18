@@ -3,7 +3,7 @@ import { TiktokController } from './tiktok.controller';
 import { TiktokService } from './tiktok.service';
 
 @Module({
-    controllers: [TiktokController],
-    providers: [TiktokService],
+  controllers: [TiktokController],
+  providers: [TiktokService],
 })
-export class TiktokModule { }
+export class TiktokModule {}

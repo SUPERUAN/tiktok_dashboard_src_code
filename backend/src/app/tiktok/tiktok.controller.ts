@@ -17,10 +17,7 @@ export class TiktokController {
   }
 
   @Get('exchange-token')
-  async exchangeToken(
-    @Query('code') code: string,
-    @Res() res: Response,
-  ) {
+  async exchangeToken(@Query('code') code: string, @Res() res: Response) {
     if (!code) {
       return res.status(400).json({ message: 'Missing code' });
     }

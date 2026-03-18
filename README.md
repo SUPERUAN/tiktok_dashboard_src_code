@@ -1,82 +1,216 @@
-# TiktokDashboard
+# TikTok Dashboard
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A dashboard project for TikTok Login, fetching channel and video data from the TikTok API, and exporting the result to Excel.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## Features
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+- Login with TikTok
+- Fetch channel information
+- Fetch video list from TikTok
+- Display dashboard data on the frontend
+- Export data to Excel
 
-## Finish your CI setup
+## Tech Stack
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/H5KI3OnxjF)
+### Frontend
+- Angular
+- Nx Workspace
 
+### Backend
+- NestJS
+- Axios
 
-## Run tasks
+### Other
+- TikTok Open API
+- Excel export
 
-To run the dev server for your app, use:
+## Project Structure
 
-```sh
+```text
+apps/
+  tiktok_dashboard/   # Angular frontend
+backend/              # NestJS backend
+certs/                # local HTTPS certificate for callback
+```
+
+## Environment Variables
+
+Create a `.env` file for the backend and configure values like this:
+
+```env
+TIKTOK_CLIENT_KEY=your_client_key
+TIKTOK_CLIENT_SECRET=your_client_secret
+TIKTOK_REDIRECT_URI=https://mayson.com:3443/api/tiktok/callback
+TIKTOK_AUTH_STATE=test123
+FRONTEND_URL=http://localhost:4200
+```
+
+## Local Hosts
+
+For the local callback domain, add this entry to your `hosts` file:
+
+```txt
+127.0.0.1 mayson.com
+```
+
+Windows path:
+
+```txt
+C:\Windows\System32\drivers\etc\hosts
+```
+
+## HTTPS Certificate for Callback
+
+TikTok redirect callback uses a local HTTPS domain.
+
+This project uses a certificate for `mayson.com` stored in the `certs/` folder.
+
+Example:
+
+```text
+certs/
+  mayson.com.pem
+  mayson.com-key.pem
+```
+
+## TikTok Redirect URL
+
+Set this value in the TikTok Developer Portal:
+
+```txt
+https://mayson.com:3443/api/tiktok/callback
+```
+
+It must match `TIKTOK_REDIRECT_URI` in the `.env` file.
+
+## Run Project
+
+### Run Frontend
+
+```bash
 npx nx serve tiktok_dashboard
 ```
 
-To create a production bundle:
+Frontend runs at:
 
-```sh
-npx nx build tiktok_dashboard
+```txt
+http://localhost:4200
 ```
 
-To see all available targets to run for a project, run:
+### Run Backend
 
-```sh
+```bash
+npx nx serve backend
+```
+
+Backend runs at:
+
+```txt
+http://localhost:3000/api
+```
+
+There is also a local HTTPS callback server at:
+
+```txt
+https://mayson.com:3443/api/tiktok/callback
+```
+
+## Login Flow
+
+1. The user clicks `Login with TikTok` on the frontend
+2. The frontend opens the backend route `/api/tiktok/login`
+3. The backend redirects to TikTok authorization
+4. TikTok redirects back to `https://mayson.com:3443/api/tiktok/callback`
+5. The callback server forwards the `code` to `/api/tiktok/exchange-token`
+6. The backend exchanges the code for an access token
+7. The backend redirects back to the frontend
+8. The user clicks `Load Videos` to fetch dashboard data
+
+## API Endpoints
+
+### Login
+```http
+GET /api/tiktok/login
+```
+
+### Exchange Token
+```http
+GET /api/tiktok/exchange-token?code=...
+```
+
+### Get Videos Dashboard
+```http
+GET /api/tiktok/videos
+```
+
+## Frontend Dashboard
+
+The main page supports:
+
+- Login with TikTok
+- Load Videos
+- Export Excel
+
+Displayed fields include:
+
+- Cover
+- Id
+- Title
+- Description
+- Create Time
+- Views
+- Likes
+- Comments
+- Shares
+- Duration
+- Link
+
+## Notes
+
+- The access token is currently stored in backend memory only. If the backend restarts, login is required again.
+- If the TikTok API does not return all videos, that may be a TikTok API limitation rather than a frontend/backend bug.
+- To switch TikTok accounts more easily, try using `disable_auto_auth=1` in the authorization URL.
+- If `CLIENT_SECRET` was exposed, rotate it immediately in the TikTok Developer Portal.
+
+## Useful Commands
+
+Show all projects in the workspace:
+
+```bash
+npx nx show projects
+```
+
+Show frontend targets:
+
+```bash
 npx nx show project tiktok_dashboard
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+Show backend targets:
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/angular:app demo
+```bash
+npx nx show project backend
 ```
 
-To generate a new library, use:
+Create a production build for the frontend:
 
-```sh
-npx nx g @nx/angular:lib mylib
+```bash
+npx nx build tiktok_dashboard
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+## Current Status
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+The project currently supports:
 
+- TikTok Login
+- Local HTTPS redirect callback
+- Token exchange
+- Dashboard data loading
+- Excel export
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Production hardening not yet done:
 
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- Persist token to database or storage
+- Refresh token flow
+- Better error handling
+- Production deployment configuration
